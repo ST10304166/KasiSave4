@@ -109,12 +109,16 @@
             android:gravity="center"
             android:orientation="vertical"
             android:layout_marginTop="26dp">
-
             <ImageView
+                android:id="@+id/imgViewAllExpenses"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:src="@drawable/ic_view_all"
-                android:contentDescription="View All Expenses" />
+                android:contentDescription="View All Expenses"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -123,6 +127,7 @@
                 android:text="View All Expenses"
                 android:textSize="16sp"
                 android:textStyle="bold" />
+
         </LinearLayout>
     </LinearLayout>
 

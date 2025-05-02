@@ -7,6 +7,31 @@
     android:layout_height="match_parent"
     android:background="@drawable/backround_colour">
 
+    <ImageButton
+        android:id="@+id/btn_skip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Skip"
+        android:src="@drawable/ic_skip"
+        app:tint="@android:color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/skip_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Skip"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:fontFamily="@font/aclonica"
+        app:layout_constraintTop_toBottomOf="@id/btn_skip"
+        app:layout_constraintEnd_toEndOf="@id/btn_skip"
+        android:layout_marginTop="4dp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

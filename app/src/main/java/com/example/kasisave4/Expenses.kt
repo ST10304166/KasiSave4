@@ -2,6 +2,7 @@ package com.example.kasisave4
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -49,6 +50,14 @@ class Expenses : AppCompatActivity() {
         btnAddExpense.setOnClickListener {
             val intent = Intent(this, AddExpenses::class.java)
             startActivity(intent)
+
         }
+        val viewAllExpensesImage = findViewById<ImageView>(R.id.imgViewAllExpenses)
+
+        viewAllExpensesImage.setOnClickListener {
+            val intent = Intent(this, ViewExpenses::class.java)
+            startActivity(intent)
+        }
+
     }
 }

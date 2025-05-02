@@ -45,7 +45,24 @@
             android:gravity="center"
             android:clipToOutline="true">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description"
+                android:textStyle="bold"
+                android:layout_marginTop="8dp" />
+
             <!-- Amount -->
+
+            <EditText
+                android:id="@+id/Cdescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/rounded_edittext"
+                android:inputType="textEmailAddress"
+                android:padding="10dp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -76,7 +93,6 @@
                 android:layout_height="wrap_content"
                 android:hint="dd/mm/yy"
                 android:inputType="date"
-                android:focusable="false"
                 android:background="@drawable/rounded_edittext"
                 android:padding="10dp"
                 android:layout_marginBottom="12dp" />
@@ -137,7 +153,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Add Expense"
-                android:backgroundTint="@drawable/dark_blue"
+                android:background="#003366"
                 android:textColor="@android:color/white"
                 android:layout_marginTop="16dp"
                 android:paddingHorizontal="32dp" />
