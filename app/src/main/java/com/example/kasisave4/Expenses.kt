@@ -33,11 +33,11 @@ class Expenses : AppCompatActivity() {
                     finish() // optional, to close Expenses screen
                     true
                 }
-//                R.id.nav_income -> {
-//                    startActivity(Intent(this, Income::class.java))
-//                    finish()
-//                    true
-//                }
+                R.id.nav_income -> {
+                    startActivity(Intent(this, Income::class.java))
+                    finish()
+                    true
+                }
 //                R.id.nav_analysis -> {
 //                    startActivity(Intent(this, Analysis::class.java))
 //                    finish()

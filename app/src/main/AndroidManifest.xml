@@ -13,6 +13,9 @@
         android:theme="@style/Theme.KasiSave4"
         tools:targetApi="31">
         <activity
+            android:name=".Income"
+            android:exported="false" />
+        <activity
             android:name=".Badges_Achievements"
             android:exported="false" />
         <activity

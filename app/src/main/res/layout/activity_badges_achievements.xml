@@ -12,9 +12,12 @@
         android:id="@+id/btnBack"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_gravity="clip_horizontal|start"
+        android:src="@drawable/back_button"
         android:contentDescription="Back"
-        android:src="@drawable/back_button" />
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <!-- Title -->
     <TextView
@@ -43,8 +46,8 @@
         android:gravity="center_horizontal">
 
         <ImageView
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="104dp"
+            android:layout_height="104dp"
             android:src="@drawable/super_saver_icon"/>
 
         <TextView
@@ -82,8 +85,8 @@
         android:gravity="center_horizontal">
 
         <ImageView
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="104dp"
+            android:layout_height="104dp"
             android:src="@drawable/millionaire_icon"/>
 
         <TextView
@@ -115,8 +118,8 @@
         android:gravity="center_horizontal">
 
         <ImageView
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="104dp"
+            android:layout_height="104dp"
             android:src="@drawable/kasi_saver_icon"/>
 
         <TextView
@@ -146,8 +149,8 @@
         android:gravity="center_horizontal">
 
         <ImageView
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="104dp"
+            android:layout_height="104dp"
             android:src="@drawable/big_spender_icon"/>
 
         <TextView
