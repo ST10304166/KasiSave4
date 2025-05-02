@@ -15,9 +15,10 @@
         android:id="@+id/nav_analysis"
         android:icon="@drawable/ic_analysis"
         android:title="Analysis" />
-<!--    <item-->
-<!--        android:id="@+id/nav_income"-->
-<!--        android:icon="@drawable/ic_income"-->
-<!--        android:title="Income" />-->
+
+    <item
+        android:id="@+id/nav_income"
+        android:icon="@drawable/ic_income"
+        android:title="Income"/>
 
 </menu>

@@ -42,6 +42,10 @@ class DashboardActivity : AppCompatActivity() {
 //                    startActivity(Intent(this, AnalysisActivity::class.java))
 //                    true
 //                }
+//                  R.id.nav_income -> {
+//                    startActivity(Intent(this, IncomeActivity::class.java))
+//                    true
+//                  }
                 else -> false // Handles any unexpected menu item
             }
         }
