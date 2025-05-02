@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.card.MaterialCardView
 
 class DashboardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,10 +35,10 @@ class DashboardActivity : AppCompatActivity() {
                     Toast.makeText(this, "You're already on the Home page.", Toast.LENGTH_SHORT).show()
                     true
                 }
-//                R.id.nav_expenses -> {
-//                    startActivity(Intent(this, ExpensesActivity::class.java))
-//                    true
-//                }
+                R.id.nav_expenses -> {
+                    startActivity(Intent(this, Expenses::class.java))
+                    true
+                }
 //                R.id.nav_analysis -> {
 //                    startActivity(Intent(this, AnalysisActivity::class.java))
 //                    true
@@ -48,6 +49,12 @@ class DashboardActivity : AppCompatActivity() {
 //                  }
                 else -> false // Handles any unexpected menu item
             }
+        }
+
+        val milestoneCard = findViewById<MaterialCardView>(R.id.card_milestones)
+        milestoneCard.setOnClickListener {
+            val intent = Intent(this, Badges_Achievements::class.java)
+            startActivity(intent)
         }
 
         // Settings icon click

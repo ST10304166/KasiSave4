@@ -155,10 +155,13 @@
 
             <!-- Milestones Card -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_milestones"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="6dp"
+                android:clickable="true"
+                android:focusable="true"
                 android:background="@drawable/dark_green">
 
                 <LinearLayout
@@ -206,6 +209,7 @@
         android:background="@drawable/cream"
         app:itemIconTint="@color/black"
         app:itemTextColor="@color/black"
+        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
