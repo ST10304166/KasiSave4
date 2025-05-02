@@ -40,6 +40,6 @@ class ExpenseAdapter(private val expenses: List<Expense>) :
             holder.imgReceipt.setImageResource(R.drawable.placeholder_image) // fallback image
         }
     }
-
+//
     override fun getItemCount() = expenses.size
 }
