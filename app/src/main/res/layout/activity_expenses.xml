@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/backround_colour"
+    >
+
+    <!-- Top Card: Total Expenses -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/dark_green"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/txtTotalAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="R5000"
+            android:textColor="@android:color/white"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtTotalLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Expenses This Month"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- Main Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:layout_marginTop="16dp">
+
+        <!-- Add Expense -->
+
+
+        <!-- Analyze Spending -->
+
+        <LinearLayout
+            android:id="@+id/btnAddExpense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="48dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_add_expense" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Add Expense"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btnAnalyzeSpending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_analyze_spending" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Analyze Spending"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- View All Expenses -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/btnViewAllExpenses"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:contentDescription="View All Expenses"
+                android:src="@drawable/ic_view_all" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="View All Expenses"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+    <!-- Bottom Navigation -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:background="@drawable/cream"
+        android:gravity="center"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/navHome"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_home"
+            android:layout_weight="1"
+            android:contentDescription="Home" />
+
+        <ImageView
+            android:id="@+id/navExpenses"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_expenses"
+            android:layout_weight="1"
+            android:contentDescription="Expenses" />
+
+        <ImageView
+            android:id="@+id/navAnalysis"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_analysis"
+            android:layout_weight="1"
+            android:contentDescription="Analysis" />
+    </LinearLayout>
+</LinearLayout>

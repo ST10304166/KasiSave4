@@ -2,14 +2,13 @@ package com.example.kasisave4
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class DashboardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,24 +22,29 @@ class DashboardActivity : AppCompatActivity() {
             insets
         }
 
-        // Bottom navigation buttons
-        val homeButton = findViewById<ImageButton>(R.id.imageButton)
-        val expensesButton = findViewById<ImageButton>(R.id.imageButton3)
-        val analysisButton = findViewById<ImageButton>(R.id.imageButton2)
+        // BottomNavigationView setup
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
 
-        homeButton.setOnClickListener {
-            Toast.makeText(this, "You're already on the Home page.", Toast.LENGTH_SHORT).show()
+        // Optional: Set Home selected by default
+        bottomNav.selectedItemId = R.id.nav_home
+
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    Toast.makeText(this, "You're already on the Home page.", Toast.LENGTH_SHORT).show()
+                    true
+                }
+//                R.id.nav_expenses -> {
+//                    startActivity(Intent(this, ExpensesActivity::class.java))
+//                    true
+//                }
+//                R.id.nav_analysis -> {
+//                    startActivity(Intent(this, AnalysisActivity::class.java))
+//                    true
+//                }
+                else -> false // Handles any unexpected menu item
+            }
         }
-
-//        expensesButton.setOnClickListener {
-//            val intent = Intent(this, ExpensesActivity::class.java)
-//            startActivity(intent)
-//        }
-
-//        analysisButton.setOnClickListener {
-//            val intent = Intent(this, AnalysisActivity::class.java)
-//            startActivity(intent)
-//        }
 
         // Settings icon click
         val settingsIcon = findViewById<ImageView>(R.id.settings_icon)
