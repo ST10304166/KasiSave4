@@ -1,5 +1,6 @@
 package com.example.kasisave4
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.*
@@ -17,6 +18,7 @@ class Settings : AppCompatActivity() {
     private lateinit var cardView: CardView
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var textViews: List<TextView>
+    private lateinit var btnBack: ImageView  // Back button reference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Load dark mode preference BEFORE setting content view
@@ -36,6 +38,14 @@ class Settings : AppCompatActivity() {
         currencySpinner = findViewById(R.id.spinnerCurrency)
         backupButton = findViewById(R.id.buttonBackup)
         cardView = findViewById(R.id.settingsCard)
+        btnBack = findViewById(R.id.btnBack) // Back button initialization
+
+        // Back button click listener
+        btnBack.setOnClickListener {
+            val intent = Intent(this, DashboardActivity::class.java) // Replace with your actual dashboard class
+            startActivity(intent)
+            finish()
+        }
 
         // List of all text views that need color adjustment
         textViews = listOf(

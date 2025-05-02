@@ -2,6 +2,7 @@ package com.example.kasisave4
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -24,13 +25,13 @@ class Expenses : AppCompatActivity() {
 
         // Setup BottomNavigationView
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
-        bottomNav.selectedItemId = R.id.nav_expenses // Highlight current tab
+        bottomNav.selectedItemId = R.id.nav_expenses
 
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
                     startActivity(Intent(this, DashboardActivity::class.java))
-                    finish() // optional, to close Expenses screen
+                    finish()
                     true
                 }
                 R.id.nav_income -> {
@@ -38,14 +39,16 @@ class Expenses : AppCompatActivity() {
                     finish()
                     true
                 }
-//                R.id.nav_analysis -> {
-//                    startActivity(Intent(this, Analysis::class.java))
-//                    finish()
-//                    true
-//                }
-                R.id.nav_expenses -> true // Already on this screen
+                R.id.nav_expenses -> true
                 else -> false
             }
+        }
+
+        // Add Expense button click handler
+        val btnAddExpense = findViewById<LinearLayout>(R.id.btnAddExpense)
+        btnAddExpense.setOnClickListener {
+            val intent = Intent(this, AddExpenses::class.java)
+            startActivity(intent)
         }
     }
 }
