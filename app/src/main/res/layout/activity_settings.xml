@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backround_colour"
+    android:padding="24dp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/settingsCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="6dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <!-- Page Title -->
+            <TextView
+                android:id="@+id/textViewTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:text="Settings"
+                android:textColor="#000000"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+
+            <!-- Appearance Section -->
+            <TextView
+                android:id="@+id/textViewAppearance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Appearance"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewAppearanceDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:text="Enable dark mode to reduce eye strain in low light conditions."
+                android:textSize="14sp" />
+
+            <Switch
+                android:id="@+id/switchDarkMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dark Mode" />
+
+            <!-- Preferences Section -->
+            <TextView
+                android:id="@+id/textViewPreferences"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Preferences"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewCurrencyDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:text="Select your preferred currency."
+                android:textSize="14sp" />
+
+            <Spinner
+                android:id="@+id/spinnerCurrency"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/textViewNotificationDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="4dp"
+                android:text="Enable or disable daily budget notifications."
+                android:textSize="14sp" />
+
+            <Switch
+                android:id="@+id/switchNotifications"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Notifications" />
+
+            <!-- Backup Section -->
+            <TextView
+                android:id="@+id/textViewBackup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Backup/Export"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewBackupDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="8dp"
+                android:text="Backup your data for safety or export it for analysis."
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/buttonBackup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="#336D47"
+                android:padding="12dp"
+                android:text="Backup My Data"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</ScrollView>
