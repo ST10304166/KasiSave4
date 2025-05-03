@@ -3,4 +3,5 @@ The Add Expense screen allows users to log financial entries by specifying the a
 In the Settings section, users can enable or disable dark mode, which dynamically changes the CardView background to black and text to white in real time. The settings screen also allows users to choose their preferred currency, toggle daily budget notifications, and includes a placeholder button for backing up their data in future updates. The interface is clean and consistent, with a back button in the top-right corner of the settings screen that returns the user to the dashboard.
 The application is developed using Kotlin and Android Jetpack components, targeting Android 12 and above. It prioritizes offline functionality and simplicity, making it suitable for users who want a straightforward tool to track personal spending. Planned enhancements include cloud backup, biometric login, and analytical reports to further empower users in achieving their financial goals.
 GitHub link: https://github.com/ST10304166/KasiSave4.git
-Youtube link: https://youtu.be/YZ9zPSWWmDc
+Youtube link: https://youtu.be/yPrurIO_ddo
+https://youtu.be/yPrurIO_ddo
