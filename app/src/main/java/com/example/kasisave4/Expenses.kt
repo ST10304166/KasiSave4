@@ -52,6 +52,12 @@ class Expenses : AppCompatActivity() {
             startActivity(intent)
 
         }
+        // Analyze Spending (filtered history) button click handler
+        val btnAnalyzeSpending = findViewById<LinearLayout>(R.id.btnAnalyzeSpending)
+        btnAnalyzeSpending.setOnClickListener {
+            val intent = Intent(this, ExpenseHistory::class.java)
+            startActivity(intent)
+        }
         val viewAllExpensesImage = findViewById<ImageView>(R.id.imgViewAllExpenses)
 
         viewAllExpensesImage.setOnClickListener {

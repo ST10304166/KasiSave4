@@ -21,7 +21,7 @@ class ViewExpenses : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerExpenses)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Load expenses from DB
+        // Load all expenses initially
         lifecycleScope.launch {
             val expenses = db.expenseDao().getAllExpenses()
             withContext(Dispatchers.Main) {

@@ -1,6 +1,7 @@
 package com.example.kasisave4
 
 import android.Manifest
+import android.app.DatePickerDialog
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -18,6 +19,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 class AddExpenses : AppCompatActivity() {
 
@@ -42,7 +45,6 @@ class AddExpenses : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_expenses)
 
-        // Prevent content overlap with system bars
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -51,36 +53,54 @@ class AddExpenses : AppCompatActivity() {
 
         db = AppDatabase.getInstance(this)
 
-        // Get UI references
         val descEt = findViewById<EditText>(R.id.Cdescription)
         val amtEt = findViewById<EditText>(R.id.editAmount)
         val dateEt = findViewById<EditText>(R.id.editDate)
+        dateEt.isFocusable = false
+        dateEt.isClickable = true
+
+        dateEt.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+            val datePicker = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+                val formattedMonth = String.format("%02d", selectedMonth + 1)
+                val formattedDay = String.format("%02d", selectedDay)
+                val formattedDate = "$selectedYear-$formattedMonth-$formattedDay"
+                dateEt.setText(formattedDate)
+            }, year, month, day)
+
+            datePicker.show()
+        }
+
         val spinner = findViewById<Spinner>(R.id.spinnerCategory)
         val submitBt = findViewById<Button>(R.id.btnSubmitExpense)
         val uploadBt = findViewById<Button>(R.id.btnUploadFile)
         val cameraBt = findViewById<ImageButton>(R.id.btnTakePicture)
 
-        // Set up spinner
+        // Spinner setup
         val categories = listOf("— choose —", "Food", "Transport", "Utilities", "Other")
         spinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categories).apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
 
-        // File picker button
+        // File picker
         uploadBt.setOnClickListener {
             filePickerLauncher.launch("*/*")
         }
 
-        // Camera button - FIXED: use permission check before launching
+        // Camera
         cameraBt.setOnClickListener {
             checkCameraPermissionAndLaunch()
         }
 
-        // Submit button
+        // Submit
         submitBt.setOnClickListener {
             val desc = descEt.text.toString().trim()
             val amt = amtEt.text.toString().toDoubleOrNull()
-            val date = dateEt.text.toString().trim()
+            val dateInput = dateEt.text.toString().trim()
 
             if (desc.isEmpty()) {
                 descEt.error = "Required"
@@ -92,10 +112,16 @@ class AddExpenses : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            if (date.isEmpty()) {
+            if (dateInput.isEmpty()) {
                 dateEt.error = "Required"
                 return@setOnClickListener
             }
+
+            // Convert date to ISO format
+            val userFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val isoFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+            val parsedDate = userFormat.parse(dateInput)
+            val date = isoFormat.format(parsedDate!!)
 
             val category = if (spinner.selectedItemPosition > 0)
                 spinner.selectedItem as String else ""
@@ -112,14 +138,13 @@ class AddExpenses : AppCompatActivity() {
             lifecycleScope.launch {
                 db.expenseDao().insertExpense(expense)
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@AddExpenses, "Saved!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@AddExpenses, "Expense Saved!", Toast.LENGTH_SHORT).show()
                     finish()
                 }
             }
         }
     }
 
-    // Launch the camera with a file URI
     private fun launchCamera() {
         val photoFile = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES),
             "photo_${System.currentTimeMillis()}.jpg")
@@ -127,7 +152,6 @@ class AddExpenses : AppCompatActivity() {
         cameraLauncher.launch(photoUri)
     }
 
-    // Check and request camera permission
     private fun checkCameraPermissionAndLaunch() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
             != PackageManager.PERMISSION_GRANTED) {
@@ -142,7 +166,6 @@ class AddExpenses : AppCompatActivity() {
         }
     }
 
-    // Handle permission request result
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -150,7 +173,7 @@ class AddExpenses : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CAMERA_PERMISSION) {
-            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 launchCamera()
             } else {
                 Toast.makeText(this, "Camera permission is required to take pictures.", Toast.LENGTH_SHORT).show()

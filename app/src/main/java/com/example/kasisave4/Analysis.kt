@@ -6,6 +6,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -37,9 +38,11 @@ class Analysis : AppCompatActivity() {
 
             val goal = SpendingGoal(minGoal = min, maxGoal = max, month = month)
 
-            lifecycleScope.launch {
+            lifecycleScope.launch(Dispatchers.IO) {
                 db.spendingGoalDao().insertSpendingGoal(goal)
-                Toast.makeText(this@Analysis, "Goal saved for $month", Toast.LENGTH_SHORT).show()
+                runOnUiThread {
+                    Toast.makeText(this@Analysis, "Goal saved for $month", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
