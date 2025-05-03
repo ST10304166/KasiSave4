@@ -1,9 +1,9 @@
-package com.example.kasisave4.data
+package com.example.kasisave4
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.example.kasisave4.model.User
+
 
 @Dao
 interface UserDao {

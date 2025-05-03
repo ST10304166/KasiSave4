@@ -1,17 +1,19 @@
 package com.example.kasisave4
 
-import android.content.Intent
+import android.Manifest
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import com.example.kasisave4.data.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -23,6 +25,7 @@ class AddExpenses : AppCompatActivity() {
     private var selectedReceiptUri: String? = null
     private var capturedImageUri: String? = null
     private lateinit var photoUri: Uri
+    private val REQUEST_CAMERA_PERMISSION = 1001
 
     // Launchers
     private val filePickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
@@ -68,11 +71,9 @@ class AddExpenses : AppCompatActivity() {
             filePickerLauncher.launch("*/*")
         }
 
-        // Camera button
+        // Camera button - FIXED: use permission check before launching
         cameraBt.setOnClickListener {
-            val photoFile = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "photo_${System.currentTimeMillis()}.jpg")
-            photoUri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", photoFile)
-            cameraLauncher.launch(photoUri)
+            checkCameraPermissionAndLaunch()
         }
 
         // Submit button
@@ -105,7 +106,7 @@ class AddExpenses : AppCompatActivity() {
                 date = date,
                 category = category,
                 receiptPath = selectedReceiptUri,
-                picturePath = capturedImageUri // ✅ Corrected
+                picturePath = capturedImageUri
             )
 
             lifecycleScope.launch {
@@ -114,6 +115,45 @@ class AddExpenses : AppCompatActivity() {
                     Toast.makeText(this@AddExpenses, "Saved!", Toast.LENGTH_SHORT).show()
                     finish()
                 }
+            }
+        }
+    }
+
+    // Launch the camera with a file URI
+    private fun launchCamera() {
+        val photoFile = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+            "photo_${System.currentTimeMillis()}.jpg")
+        photoUri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", photoFile)
+        cameraLauncher.launch(photoUri)
+    }
+
+    // Check and request camera permission
+    private fun checkCameraPermissionAndLaunch() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+            != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.CAMERA),
+                REQUEST_CAMERA_PERMISSION
+            )
+        } else {
+            launchCamera()
+        }
+    }
+
+    // Handle permission request result
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                launchCamera()
+            } else {
+                Toast.makeText(this, "Camera permission is required to take pictures.", Toast.LENGTH_SHORT).show()
             }
         }
     }

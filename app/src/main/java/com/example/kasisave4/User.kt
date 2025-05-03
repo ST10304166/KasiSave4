@@ -1,4 +1,4 @@
-package com.example.kasisave4.model
+package com.example.kasisave4
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

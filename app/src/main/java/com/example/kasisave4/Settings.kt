@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 
+
 class Settings : AppCompatActivity() {
 
     private lateinit var darkModeSwitch: Switch

@@ -1,17 +1,17 @@
-package com.example.kasisave4.data
+package com.example.kasisave4
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.kasisave4.Expense
-import com.example.kasisave4.ExpenseDao
-import com.example.kasisave4.model.User
 
-@Database(entities = [User::class, Expense::class], version = 2)
+
+@Database(entities = [User::class, Expense::class, SpendingGoal::class], version = 3)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun expenseDao(): ExpenseDao
+    abstract fun spendingGoalDao(): SpendingGoalDao
+
 
     companion object {
         @Volatile private var INSTANCE: AppDatabase? = null

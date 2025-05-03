@@ -10,6 +10,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.card.MaterialCardView
+import kotlin.jvm.java
 
 class DashboardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,14 +40,14 @@ class DashboardActivity : AppCompatActivity() {
                     startActivity(Intent(this, Expenses::class.java))
                     true
                 }
-//                R.id.nav_analysis -> {
-//                    startActivity(Intent(this, AnalysisActivity::class.java))
-//                    true
-//                }
-                  R.id.nav_income -> {
+                R.id.nav_analysis -> {
+                    startActivity(Intent(this, Analysis::class.java))
+                    true
+                }
+                R.id.nav_income -> {
                     startActivity(Intent(this, Income::class.java))
                     true
-                  }
+                }
                 else -> false // Handles any unexpected menu item
             }
         }
@@ -62,6 +63,6 @@ class DashboardActivity : AppCompatActivity() {
         settingsIcon.setOnClickListener {
             val intent = Intent(this, Settings::class.java)
             startActivity(intent)
-        }
-    }
+            }
+      }
 }

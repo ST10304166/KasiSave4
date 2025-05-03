@@ -8,6 +8,7 @@
     android:background="@drawable/backround_colour"
     tools:context=".DashboardActivity">
 
+
     <!-- Header Section -->
     <RelativeLayout
         android:id="@+id/header"
