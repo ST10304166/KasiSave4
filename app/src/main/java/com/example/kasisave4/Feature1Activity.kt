@@ -26,6 +26,6 @@ class Feature1Activity : AppCompatActivity() {
         mainLayout.setOnClickListener {
             val intent = Intent(this, Feature2Activity::class.java)
             startActivity(intent)
-        }
+        }//
     }
 }
