@@ -63,6 +63,6 @@ class DashboardActivity : AppCompatActivity() {
         settingsIcon.setOnClickListener {
             val intent = Intent(this, Settings::class.java)
             startActivity(intent)
-            }
+            }//
       }
 }

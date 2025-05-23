@@ -19,7 +19,7 @@ class Badges_Achievements : AppCompatActivity() {
         }
         val btnBack = findViewById<ImageView>(R.id.btnBack)
         btnBack.setOnClickListener {
-            finish()
+            finish()//
         }
     }
 }
