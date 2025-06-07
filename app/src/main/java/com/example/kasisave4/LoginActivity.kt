@@ -7,10 +7,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
 
@@ -18,32 +15,33 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var passwordInput: EditText
     private lateinit var loginButton: Button
     private lateinit var signUpText: TextView
-    private lateinit var db: AppDatabase  // reference to Room database
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        // Initialize views
+        //  Initialize FirebaseAuth
+        auth = FirebaseAuth.getInstance()
+
+        //  UI references
         emailInput = findViewById(R.id.emailInput)
         passwordInput = findViewById(R.id.passwordInput)
-        loginButton = findViewById(R.id.createAccountButton)
+        loginButton = findViewById(R.id.createAccountButton)  // You may want to rename this ID to loginButton in XML for clarity
         signUpText = findViewById(R.id.signUpText)
 
-        // Initialize Room database
-        db = AppDatabase.getInstance(this)
-
-        // Sign up text click
+        //  Navigate to SignUp screen
         signUpText.setOnClickListener {
             startActivity(Intent(this, SignUpActivity::class.java))
+            finish()
         }
 
-        // Login button click
+        //  Handle Login Button
         loginButton.setOnClickListener {
             val email = emailInput.text.toString().trim()
             val password = passwordInput.text.toString().trim()
 
-            // Local validation
+            //  Input validation
             if (!isValidEmail(email)) {
                 emailInput.error = "Invalid Gmail (min 4 characters before @gmail.com)"
                 return@setOnClickListener
@@ -54,22 +52,18 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Database check
-            lifecycleScope.launch {
-                val user = withContext(Dispatchers.IO) {
-                    db.userDao().getUser(email, password)
+            //  Firebase Login
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this, DashboardActivity::class.java))
+                        finish()
+                    } else {
+                        val message = task.exception?.localizedMessage ?: "Login failed"
+                        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                    }
                 }
-
-                if (user != null) {
-                    // Login success
-                    val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                } else {
-                    // Login failed
-                    Toast.makeText(this@LoginActivity, "Incorrect email or password", Toast.LENGTH_SHORT).show()
-                }
-            }
         }
     }
 

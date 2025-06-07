@@ -7,10 +7,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.google.firebase.auth.FirebaseAuth
 
 class SignUpActivity : AppCompatActivity() {
 
@@ -18,6 +15,7 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var passwordInput: EditText
     private lateinit var createAccountButton: Button
     private lateinit var signInText: TextView
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,14 +26,15 @@ class SignUpActivity : AppCompatActivity() {
         createAccountButton = findViewById(R.id.createAccountButton)
         signInText = findViewById(R.id.signInText)
 
-        val db = AppDatabase.getInstance(this)
-        val userDao = db.userDao()
+        // Initialize Firebase Auth
+        auth = FirebaseAuth.getInstance()
 
+        // Handle Sign-Up Button
         createAccountButton.setOnClickListener {
             val email = emailInput.text.toString().trim()
             val password = passwordInput.text.toString().trim()
 
-            // Validate input
+            //Validate Email & Password
             if (!isValidEmail(email)) {
                 emailInput.error = "Invalid Gmail (min 4 characters before @gmail.com)"
                 return@setOnClickListener
@@ -46,27 +45,23 @@ class SignUpActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            CoroutineScope(Dispatchers.IO).launch {
-                val existingUser = userDao.getUserByEmail(email)
-                if (existingUser != null) {
-                    withContext(Dispatchers.Main) {
-                        emailInput.error = "Email already exists"
-                        Toast.makeText(this@SignUpActivity, "This email is already registered", Toast.LENGTH_SHORT).show()
-                    }
-                } else {
-                    val newUser = User(email = email, password = password)
-                    userDao.insertUser(newUser)
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(this@SignUpActivity, "Account created!", Toast.LENGTH_SHORT).show()
-                        startActivity(Intent(this@SignUpActivity, LoginActivity::class.java))
+            // Create user in Firebase Auth
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(this, "Account created!", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this, LoginActivity::class.java))
                         finish()
+                    } else {
+                        val message = task.exception?.localizedMessage ?: "Sign-up failed"
+                        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                     }
                 }
-            }
         }
 
+        //  Already have account → go to login
         signInText.setOnClickListener {
-            startActivity(Intent(this@SignUpActivity, LoginActivity::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
     }
