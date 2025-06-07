@@ -6,23 +6,20 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 class Analysis : AppCompatActivity() {
 
-    private lateinit var db: AppDatabase
     private lateinit var tvCurrentGoal: TextView
+    private val firestore = FirebaseFirestore.getInstance()
+    private val auth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_analysis)
-
-        db = AppDatabase.getInstance(this)
 
         val etMinGoal = findViewById<EditText>(R.id.etMinGoal)
         val etMaxGoal = findViewById<EditText>(R.id.etMaxGoal)
@@ -30,7 +27,14 @@ class Analysis : AppCompatActivity() {
         tvCurrentGoal = findViewById(R.id.tvCurrentGoal)
 
         val currentMonth = getCurrentMonth()
-        loadGoal(currentMonth) // Load the goal when the screen opens
+        val currentUserId = auth.currentUser?.uid
+
+        if (currentUserId == null) {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        loadGoal(currentMonth, currentUserId)
 
         btnSaveGoal.setOnClickListener {
             val min = etMinGoal.text.toString().toDoubleOrNull()
@@ -41,29 +45,45 @@ class Analysis : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val goal = SpendingGoal(minGoal = min, maxGoal = max, month = currentMonth)
+            val goal = SpendingGoal(
+                minGoal = min,
+                maxGoal = max,
+                month = currentMonth,
+                userId = currentUserId
+            )
 
-            lifecycleScope.launch(Dispatchers.IO) {
-                db.spendingGoalDao().insertSpendingGoal(goal)
-                runOnUiThread {
-                    Toast.makeText(this@Analysis, "Goal saved for $currentMonth", Toast.LENGTH_SHORT).show()
-                    loadGoal(currentMonth) // Reload to show updated goal
+            val docId = "${currentUserId}_$currentMonth"
+
+            firestore.collection("spending_goals")
+                .document(docId)
+                .set(goal)
+                .addOnSuccessListener {
+                    Toast.makeText(this, "Goal saved for $currentMonth", Toast.LENGTH_SHORT).show()
+                    loadGoal(currentMonth, currentUserId)
                 }
-            }
+                .addOnFailureListener {
+                    Toast.makeText(this, "Failed to save goal", Toast.LENGTH_SHORT).show()
+                }
         }
     }
 
-    private fun loadGoal(month: String) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val goal = db.spendingGoalDao().getGoalForMonth(month)
-            runOnUiThread {
+    private fun loadGoal(month: String, userId: String) {
+        val docId = "${userId}_$month"
+
+        firestore.collection("spending_goals")
+            .document(docId)
+            .get()
+            .addOnSuccessListener { document ->
+                val goal = document.toObject(SpendingGoal::class.java)
                 if (goal != null) {
                     tvCurrentGoal.text = "Current Goal for $month:\nMin: R${goal.minGoal}, Max: R${goal.maxGoal}"
                 } else {
                     tvCurrentGoal.text = "Current Goal for $month: Not Set"
                 }
             }
-        }
+            .addOnFailureListener {
+                tvCurrentGoal.text = "Failed to load goal for $month"
+            }
     }
 
     private fun getCurrentMonth(): String {

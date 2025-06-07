@@ -1,13 +1,8 @@
 package com.example.kasisave4
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity(tableName = "SpendingGoal")
 data class SpendingGoal(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val minGoal: Double,
-    val maxGoal: Double,
-    val month: String // Example: "2025-05"
+    val minGoal: Double = 0.0,
+    val maxGoal: Double = 0.0,
+    val month: String = "", // Format: "2025-05"
+    val userId: String = "" // Optional: add if you're tracking user-specific goals
 )
-

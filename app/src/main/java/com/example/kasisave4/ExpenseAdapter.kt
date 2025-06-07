@@ -1,14 +1,12 @@
 package com.example.kasisave4
 
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.kasisave4.R
-import com.example.kasisave4.Expense
+import com.bumptech.glide.Glide
 
 class ExpenseAdapter(private val expenses: List<Expense>) :
     RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() {
@@ -34,12 +32,18 @@ class ExpenseAdapter(private val expenses: List<Expense>) :
         holder.tvDate.text = item.date
         holder.tvCategory.text = item.category
 
-        if (!item.picturePath.isNullOrEmpty()) {
-            holder.imgReceipt.setImageURI(Uri.parse(item.picturePath))
+        val imageUrl = item.pictureUrl ?: item.receiptUrl
+
+        if (!imageUrl.isNullOrEmpty()) {
+            Glide.with(holder.itemView.context)
+                .load(imageUrl)
+                .placeholder(R.drawable.placeholder_image)
+                .error(R.drawable.placeholder_image)
+                .into(holder.imgReceipt)
         } else {
-            holder.imgReceipt.setImageResource(R.drawable.placeholder_image) // fallback image
+            holder.imgReceipt.setImageResource(R.drawable.placeholder_image)
         }
     }
-//
-    override fun getItemCount() = expenses.size
+
+    override fun getItemCount(): Int = expenses.size
 }
