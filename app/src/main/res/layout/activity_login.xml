@@ -6,10 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/backround_colour">
 
-    <!-- Title Text -->
-
-    <!-- CardView for Login Form -->
-
+    <!-- Title -->
     <TextView
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
@@ -20,11 +17,12 @@
         android:text="Welcome Back! Log In Below!"
         android:textColor="#000000"
         android:textSize="34sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0" />
 
+    <!-- Login Card -->
     <androidx.cardview.widget.CardView
         android:id="@+id/loginCard"
         android:layout_width="0dp"
@@ -34,9 +32,9 @@
         android:layout_marginEnd="20dp"
         app:cardCornerRadius="20dp"
         app:cardElevation="5dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleText">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,7 +52,7 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <!-- Email Address Input -->
+            <!-- Email Input -->
             <EditText
                 android:id="@+id/emailInput"
                 android:layout_width="match_parent"
@@ -78,8 +76,9 @@
                 android:textColor="#000000"
                 android:textColorHint="#888888" />
 
+            <!-- Log In Button -->
             <Button
-                android:id="@+id/createAccountButton"
+                android:id="@+id/loginButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -89,11 +88,13 @@
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />
 
+            <!-- Sign Up Text -->
             <TextView
                 android:id="@+id/signUpText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="10dp"
                 android:text="Don't have an account? Sign Up"
                 android:textColor="#000000"
                 android:textSize="16sp"
@@ -102,7 +103,6 @@
                 android:focusable="true" />
 
         </LinearLayout>
-
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
