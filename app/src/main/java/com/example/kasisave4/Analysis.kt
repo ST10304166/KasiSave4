@@ -1,11 +1,13 @@
 package com.example.kasisave4
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
@@ -65,7 +67,36 @@ class Analysis : AppCompatActivity() {
                     Toast.makeText(this, "Failed to save goal", Toast.LENGTH_SHORT).show()
                 }
         }
+        // BottomNavigationView setup
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
+
+        // Optional: Set Home selected by default
+        bottomNav.selectedItemId = R.id.nav_home
+
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    startActivity(Intent(this, DashboardActivity::class.java))
+
+                    true
+                }
+                R.id.nav_expenses -> {
+                    startActivity(Intent(this, Expenses::class.java))
+                    true
+                }
+                R.id.nav_analysis -> {
+                    Toast.makeText(this, "You're already on the Analysis Page", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.nav_income -> {
+                    startActivity(Intent(this, Income::class.java))
+                    true
+                }
+                else -> false // Handles any unexpected menu item
+            }
+        }
     }
+
 
     private fun loadGoal(month: String, userId: String) {
         val docId = "${userId}_$month"
