@@ -2,6 +2,7 @@ package com.example.kasisave4
 
 import android.Manifest
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -32,25 +33,26 @@ class AddExpenses : AppCompatActivity() {
     private lateinit var photoUri: Uri
     private val REQUEST_CAMERA_PERMISSION = 1001
 
+    private lateinit var spinner: Spinner
+    private lateinit var categories: MutableList<String>
+    private lateinit var adapter: ArrayAdapter<String>
+
     private val filePickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        selectedReceiptUri = uri  // Store the real Uri, not a string
+        selectedReceiptUri = uri
     }
 
     private val cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-        if (success) {
-            capturedImageUri = photoUri  // Store real Uri
-        }
+        if (success) capturedImageUri = photoUri
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadCategories()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_expenses)
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
 
         firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
@@ -59,13 +61,17 @@ class AddExpenses : AppCompatActivity() {
         val descEt = findViewById<EditText>(R.id.Cdescription)
         val amtEt = findViewById<EditText>(R.id.editAmount)
         val dateEt = findViewById<EditText>(R.id.editDate)
-        val spinner = findViewById<Spinner>(R.id.spinnerCategory)
         val submitBt = findViewById<Button>(R.id.btnSubmitExpense)
         val uploadBt = findViewById<Button>(R.id.btnUploadFile)
         val cameraBt = findViewById<ImageButton>(R.id.btnTakePicture)
+        val createCategoryBtn = findViewById<Button>(R.id.btnCreateCategory)
+        spinner = findViewById(R.id.spinnerCategory)
 
-        dateEt.isFocusable = false
-        dateEt.isClickable = true
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         dateEt.setOnClickListener {
             val calendar = Calendar.getInstance()
@@ -73,17 +79,20 @@ class AddExpenses : AppCompatActivity() {
             val month = calendar.get(Calendar.MONTH)
             val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-            val datePicker = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
-                val formattedDate = "%04d-%02d-%02d".format(selectedYear, selectedMonth + 1, selectedDay)
-                dateEt.setText(formattedDate)
-            }, year, month, day)
-
-            datePicker.show()
+            DatePickerDialog(this, { _, y, m, d ->
+                dateEt.setText(String.format("%04d-%02d-%02d", y, m + 1, d))
+            }, year, month, day).show()
         }
 
-        val categories = listOf("— choose —", "Food", "Transport", "Utilities", "Other")
-        spinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categories).apply {
-            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        categories = mutableListOf("— choose —")
+        adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categories)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
+
+        loadCategories()
+
+        createCategoryBtn.setOnClickListener {
+            startActivity(Intent(this, CreateCategoryActivity::class.java))
         }
 
         uploadBt.setOnClickListener {
@@ -114,22 +123,18 @@ class AddExpenses : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val userFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val isoFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
-            val parsedDate = userFormat.parse(dateInput)
-            val date = isoFormat.format(parsedDate!!)
+            val parsedDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(dateInput)
+            val date = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(parsedDate!!)
 
-            val category = if (spinner.selectedItemPosition > 0)
-                spinner.selectedItem as String else ""
-
-            if (category.isEmpty()) {
+            val category = spinner.selectedItem.toString()
+            if (category == "— choose —") {
                 Toast.makeText(this, "Please select a valid category", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             val currentUser = auth.currentUser
             if (currentUser == null) {
-                Toast.makeText(this, "You must be logged in to add expenses", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "You must be logged in", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -146,7 +151,7 @@ class AddExpenses : AppCompatActivity() {
 
             val uploadTasks = mutableListOf<com.google.android.gms.tasks.Task<Uri>>()
 
-            if (receiptRef != null && selectedReceiptUri != null) {
+            if (receiptRef != null) {
                 val task = receiptRef.putFile(selectedReceiptUri!!).continueWithTask { upload ->
                     if (!upload.isSuccessful) throw upload.exception!!
                     receiptRef.downloadUrl
@@ -154,7 +159,7 @@ class AddExpenses : AppCompatActivity() {
                 uploadTasks.add(task)
             }
 
-            if (pictureRef != null && capturedImageUri != null) {
+            if (pictureRef != null) {
                 val task = pictureRef.putFile(capturedImageUri!!).continueWithTask { upload ->
                     if (!upload.isSuccessful) throw upload.exception!!
                     pictureRef.downloadUrl
@@ -175,12 +180,38 @@ class AddExpenses : AppCompatActivity() {
 
                         saveExpenseToFirestore(userId, desc, amt, date, category, receiptUrl, pictureUrl)
                     }
-                    .addOnFailureListener { e ->
-                        Toast.makeText(this, "Upload failed: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                    .addOnFailureListener {
+                        Toast.makeText(this, "Upload failed: ${it.localizedMessage}", Toast.LENGTH_SHORT).show()
                     }
             }
         }
     }
+
+    private fun loadCategories() {
+        val userId = auth.currentUser?.uid ?: return
+
+        val defaultCategories = listOf("Food", "Transport", "Utilities", "Health")
+        categories.clear()
+        categories.add("— choose —")
+        categories.addAll(defaultCategories)
+
+        firestore.collection("users").document(userId).collection("categories")
+            .get()
+            .addOnSuccessListener { result ->
+                for (doc in result) {
+                    val name = doc.getString("name")
+                    if (name != null && !categories.contains(name)) {
+                        categories.add(name)
+                    }
+                }
+                adapter.notifyDataSetChanged()
+            }
+            .addOnFailureListener {
+                // Even if loading fails, default categories will still show
+                adapter.notifyDataSetChanged()
+            }
+    }
+
 
     private fun saveExpenseToFirestore(
         userId: String,
@@ -191,7 +222,7 @@ class AddExpenses : AppCompatActivity() {
         receiptUrl: String?,
         pictureUrl: String?
     ) {
-        val expenseData = hashMapOf(
+        val expense = hashMapOf(
             "userId" to userId,
             "description" to desc,
             "amount" to amt,
@@ -203,13 +234,13 @@ class AddExpenses : AppCompatActivity() {
         )
 
         firestore.collection("expenses")
-            .add(expenseData)
+            .add(expense)
             .addOnSuccessListener {
-                Toast.makeText(this, "Expense saved to Firestore!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Expense saved!", Toast.LENGTH_SHORT).show()
                 finish()
             }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Error saving expense: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+            .addOnFailureListener {
+                Toast.makeText(this, "Error: ${it.localizedMessage}", Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -236,18 +267,12 @@ class AddExpenses : AppCompatActivity() {
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_CAMERA_PERMISSION) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                launchCamera()
-            } else {
-                Toast.makeText(this, "Camera permission is required to take pictures.", Toast.LENGTH_SHORT).show()
-            }
+        if (requestCode == REQUEST_CAMERA_PERMISSION && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            launchCamera()
+        } else {
+            Toast.makeText(this, "Camera permission required", Toast.LENGTH_SHORT).show()
         }
     }
 }
