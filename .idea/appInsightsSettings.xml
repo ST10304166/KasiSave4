@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.kasisave4" />
+                  <option name="mobileSdkAppId" value="1:23134339286:android:5ff267f01c41a725450977" />
+                  <option name="projectId" value="kasisave4" />
+                  <option name="projectNumber" value="23134339286" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

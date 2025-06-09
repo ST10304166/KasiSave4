@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "23134339286",
+    "project_id": "kasisave4",
+    "storage_bucket": "kasisave4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:23134339286:android:5ff267f01c41a725450977",
+        "android_client_info": {
+          "package_name": "com.example.kasisave4"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpf6MdjsGUdS_mqR51vs6PYYTgey2KHNg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

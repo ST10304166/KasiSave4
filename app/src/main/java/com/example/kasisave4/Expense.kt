@@ -1,15 +1,12 @@
 package com.example.kasisave4
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity(tableName = "expenses")
 data class Expense(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val description: String,
-    val amount: Double,
-    val date: String,
-    val category: String,
-    val receiptPath: String? = null,   // Optional file path
-    val picturePath: String? = null    // Optional file path
+    val userId: String = "",
+    val description: String = "",
+    val amount: Double = 0.0,
+    val date: String = "",
+    val category: String = "",
+    val receiptUrl: String? = null,    // Firebase Storage URL
+    val pictureUrl: String? = null,    // Firebase Storage URL
+    val timestamp: Long = 0L           // Used for sorting
 )

@@ -7,10 +7,8 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class LoginActivity : AppCompatActivity() {
 
@@ -18,32 +16,34 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var passwordInput: EditText
     private lateinit var loginButton: Button
     private lateinit var signUpText: TextView
-    private lateinit var db: AppDatabase  // reference to Room database
+    private lateinit var auth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        // Initialize views
+        // Firebase
+        auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
+
+        // UI
         emailInput = findViewById(R.id.emailInput)
         passwordInput = findViewById(R.id.passwordInput)
-        loginButton = findViewById(R.id.createAccountButton)
+        loginButton = findViewById(R.id.loginButton) // <-- Make sure your XML uses this ID
         signUpText = findViewById(R.id.signUpText)
 
-        // Initialize Room database
-        db = AppDatabase.getInstance(this)
-
-        // Sign up text click
+        // Redirect to SignUp
         signUpText.setOnClickListener {
             startActivity(Intent(this, SignUpActivity::class.java))
+            finish()
         }
 
-        // Login button click
+        // Handle Login
         loginButton.setOnClickListener {
             val email = emailInput.text.toString().trim()
             val password = passwordInput.text.toString().trim()
 
-            // Local validation
             if (!isValidEmail(email)) {
                 emailInput.error = "Invalid Gmail (min 4 characters before @gmail.com)"
                 return@setOnClickListener
@@ -54,22 +54,31 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Database check
-            lifecycleScope.launch {
-                val user = withContext(Dispatchers.IO) {
-                    db.userDao().getUser(email, password)
-                }
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val userId = auth.currentUser?.uid ?: return@addOnCompleteListener
 
-                if (user != null) {
-                    // Login success
-                    val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                } else {
-                    // Login failed
-                    Toast.makeText(this@LoginActivity, "Incorrect email or password", Toast.LENGTH_SHORT).show()
+                        // Fetch user profile from Firestore
+                        firestore.collection("users").document(userId).get()
+                            .addOnSuccessListener { document ->
+                                if (document.exists()) {
+                                    val firstName = document.getString("firstName") ?: "User"
+                                    Toast.makeText(this, "Welcome back, $firstName!", Toast.LENGTH_SHORT).show()
+                                    startActivity(Intent(this, DashboardActivity::class.java))
+                                    finish()
+                                } else {
+                                    Toast.makeText(this, "User profile not found in database.", Toast.LENGTH_LONG).show()
+                                }
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(this, "Failed to load profile: ${it.message}", Toast.LENGTH_LONG).show()
+                            }
+                    } else {
+                        val message = task.exception?.localizedMessage ?: "Login failed"
+                        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                    }
                 }
-            }
         }
     }
 

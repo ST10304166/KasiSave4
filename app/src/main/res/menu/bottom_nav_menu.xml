@@ -12,6 +12,11 @@
         android:title="Expenses" />
 
     <item
+        android:id="@+id/nav_graph"
+        android:icon="@drawable/ic_graph"
+        android:title="Graph" />
+
+    <item
         android:id="@+id/nav_analysis"
         android:icon="@drawable/ic_analysis"
         android:title="Analysis" />
@@ -20,5 +25,4 @@
         android:id="@+id/nav_income"
         android:icon="@drawable/ic_income"
         android:title="Income"/>
-
 </menu>

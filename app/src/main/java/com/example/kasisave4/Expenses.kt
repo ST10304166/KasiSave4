@@ -40,6 +40,10 @@ class Expenses : AppCompatActivity() {
                     finish()
                     true
                 }
+                R.id.nav_analysis -> {
+                    startActivity(Intent(this, Analysis::class.java))
+                    true
+                }
                 R.id.nav_expenses -> true
                 else -> false
             }

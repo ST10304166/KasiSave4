@@ -8,7 +8,6 @@
     android:background="@drawable/backround_colour"
     tools:context=".DashboardActivity">
 
-
     <!-- Header Section -->
     <RelativeLayout
         android:id="@+id/header"
@@ -66,139 +65,53 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Budget Overview Card -->
+            <!-- 🟩 Goal Progress Card (NEW) -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="6dp"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/dark_green">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#336D47"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Budget Overview"
-                        android:textColor="@android:color/white"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="4dp"
-                        android:text="75% of budgeting goal met"
-                        android:textColor="@android:color/white"
-                        android:textSize="16sp" />
-
-                    <ProgressBar
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="10dp"
-                        android:layout_marginTop="8dp"
-                        android:max="100"
-                        android:progress="75"
-                        android:progressTint="@android:color/holo_green_light" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Expense Overview Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="6dp"
-                android:layout_marginBottom="16dp"
                 android:background="@drawable/dark_green">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#336D47"
                     android:orientation="vertical"
+                    android:background="#336D47"
                     android:padding="16dp">
 
                     <TextView
+                        android:id="@+id/tvGoalSummary"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Expense Overview"
-                        android:textColor="@android:color/white"
+                        android:text="Monthly Spending Progress"
                         android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="4dp"
-                        android:text="5000/15000 spent"
+                        android:textStyle="bold"
                         android:textColor="@android:color/white"
-                        android:textSize="16sp" />
+                        android:layout_marginBottom="8dp" />
 
                     <ProgressBar
+                        android:id="@+id/progressBarGoal"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="10dp"
-                        android:layout_marginTop="8dp"
                         android:max="100"
-                        android:progress="33"
+                        android:progress="0"
                         android:progressTint="@android:color/holo_green_light" />
+
+                    <TextView
+                        android:id="@+id/tvGoalStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Calculating..."
+                        android:textSize="14sp"
+                        android:textColor="@android:color/white" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Milestones Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_milestones"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="6dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="@drawable/dark_green">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#336D47"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Milestones"
-                        android:textColor="@android:color/white"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="4dp"
-                        android:text="Save R500"
-                        android:textColor="@android:color/white"
-                        android:textSize="16sp" />
-
-                    <ProgressBar
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="10dp"
-                        android:layout_marginTop="8dp"
-                        android:max="100"
-                        android:progress="50"
-                        android:progressTint="@android:color/holo_green_light" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
     </ScrollView>
 
@@ -213,7 +126,7 @@
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
