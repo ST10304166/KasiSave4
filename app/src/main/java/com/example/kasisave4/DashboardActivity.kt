@@ -33,6 +33,7 @@ class DashboardActivity : AppCompatActivity() {
             view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        SpendingGoalWidgetProvider.updateSpendingGoalsWidget(this)
 
         loadGoalProgressFromFirebase()
 
